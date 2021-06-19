@@ -1,6 +1,11 @@
-![Logo](https://path/to/yggdrasil-logo.png)
+<br />
+<p align="center">
+  <a href="https://github.com/psilore/yggdrasil">
+    <img src="src/public/images/logo.png" alt="Logo" width="80" height="80">
+  </a>
 
-# Yggdrasil
+  <h3 align="center">Yggrdasil - Avensia assignment</h3>
+</p>
 
 ## Prerequisites
 
@@ -12,7 +17,11 @@ Requires node.js.
    ```sh
    git clone https://github.com/psilore/yggdrasil.git
    ```
-2. Install NPM packages
+2. Change to `yggdrasil` directory
+   ```sh
+   cd yggdrasil/
+   ```
+3. Install NPM packages
    ```sh
    npm install
    ```
@@ -55,6 +64,14 @@ Ran all test suites.
 
 ## Backend (Simple node app to serve JSON and some images)
 I borrowed this from https://github.com/avensia/api-sample-server.git. Since it is needed for the assignment.
+
+Serve backend content
+
+```sh
+npm run serve
+```
+
+### **BASE URL** [`http://localhost:8181`](http://localhost:8181)
 
 ### API Endpoints
 
