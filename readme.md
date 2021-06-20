@@ -4,7 +4,7 @@
     <img src="src/public/images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
-  <h3 align="center">Yggrdasil - Avensia assignment</h3>
+  <h3 align="center">Yggdrasil - Avensia assignment</h3>
 </p>
 
 ## Prerequisites
