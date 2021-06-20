@@ -39,7 +39,8 @@ export default class Products extends React.Component<any,Props> {
       <Styled>
         {css`
           display: grid;
-          grid-gap: 1em;
+          grid-column-gap: 1em;
+          grid-row-gap: 2.2em;
           grid-template-columns: 1fr 1fr;
           justify-items: stretch;
           @media only screen and (min-width: 768px) {

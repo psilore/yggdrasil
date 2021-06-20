@@ -49,7 +49,7 @@ ReactDOM.render(
         margin: 0;
         font-family: Poppins,Helvetica Neue,Helvetica,Segoe UI,Tahoma,Arial,sans-serif;
         font-weight: 400;
-        color: white;
+        color: rgb(181, 194, 214);
         -webkit-text-size-adjust: 100%;
         -webkit-tap-highlight-color: rgba(0,0,0,0);
         -webkit-font-smoothing: antialiased;
@@ -64,8 +64,19 @@ ReactDOM.render(
       footer {
         grid-area: footer;
       }
+      h2 {
+        color: white;
+        letter-spacing: 0.0323em;
+        font-size: 1.7em;
+        font-weight: 600;
+        line-height: 1.3;
+      }
       p {
-        color: #799bce;
+        color: rgb(155, 181, 220);
+        font-size: 1.1em;
+        letter-spacing: 0.0323em;
+        font-weight: 200;
+        line-height: 1.3;
       }
     `}
   </Style>

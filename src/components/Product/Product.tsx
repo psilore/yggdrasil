@@ -29,12 +29,18 @@ export const Product: FunctionComponent<Props> = (props) =>
       left: 50%;
       transform: translate(-50%, -50%);
     }
-    .product-title {
+    .product-title {  
+      color: rgb(155, 181, 220);  
+      font-size: 1em;
+      letter-spacing: 0.0523em;
+      font-weight: 200;
+      line-height: 1.2;
       margin-top: .55em;
       margin-bottom: .45em;
     }
     .product-price {
       margin-top: auto;
+      color: white;
       font-weight: bold;
       text-align: right;
     }
