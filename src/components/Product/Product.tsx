@@ -1,18 +1,49 @@
-
 import React, { FunctionComponent } from 'react';
 import { css, Styled } from 'react-css-in-js';
 
 
 type Props = {
+  image_url: string
   title: string
+  amount: string
 }
 
 export const Product: FunctionComponent<Props> = (props) => 
 <Styled>
   {css`
-    background: red
+    border-radius: .45em;
+    display: flex;
+    flex-flow: column nowrap;
+    .product-image-group {
+      background: rgb(7, 16, 29);
+      border-radius: .45em;
+      overflow: hidden;
+      position: relative;
+      height: 180px;
+    }
+    .product-image {
+      width: auto;
+      height: 7em;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .product-title {
+      margin-top: .55em;
+      margin-bottom: .45em;
+    }
+    .product-price {
+      margin-top: auto;
+      font-weight: bold;
+      text-align: right;
+    }
   `}
-  <div>
-    <h2>{ props.title }</h2>
+  <div className="product">
+    <div className="product-image-group">
+      <img className="product-image" src={'http://localhost:8181' + props.image_url} />
+    </div>
+    <div className="product-title">{ props.title }</div>
+    <div className="product-price">SEK { props.amount }</div>
   </div>
 </Styled>

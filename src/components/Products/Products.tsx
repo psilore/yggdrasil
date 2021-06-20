@@ -17,7 +17,7 @@ export default class Products extends React.Component<any,Props> {
     super(props);
 
     this.state = {
-      products: []
+      products: [],
     };
 
     this.getProducts = this.getProducts.bind(this);
@@ -36,14 +36,28 @@ export default class Products extends React.Component<any,Props> {
 
   render() {
     return (
-      <div>
-        {this.state.products.map((product: any) => (
-          <Product
-            title= {product.title}
-            key={product.id}
-          />
-        ))}
-      </div>
+      <Styled>
+        {css`
+          display: grid;
+          grid-gap: 1em;
+          grid-template-columns: 1fr 1fr;
+          justify-items: stretch;
+          @media only screen and (min-width: 768px) {
+            grid-template-columns: repeat( auto-fit, minmax(250px, 1fr) );
+            grid-gap: 1em;
+          }
+        `}
+        <div>
+            {this.state.products.map((product: any) => (
+              <Product
+                image_url= {product.imageUrl}
+                title= {product.title}
+                amount= {product.prices[0].amount}
+                key={product.id}
+              />
+            ))}
+        </div>
+      </Styled>
     );
   }
 }

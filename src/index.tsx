@@ -8,11 +8,12 @@ ReactDOM.render(
   <Style>
     {css`
       html {
-        background-color: rgb(13, 31, 58);
+        background-color: rgb(9, 23, 43);
       }
       body {
         margin: 0;
         font-family: Poppins,Helvetica Neue,Helvetica,Segoe UI,Tahoma,Arial,sans-serif;
+        color: white;
         -webkit-text-size-adjust: 100%;
         -webkit-tap-highlight-color: rgba(0,0,0,0);
         -webkit-font-smoothing: antialiased;
@@ -27,10 +28,12 @@ ReactDOM.render(
       footer {
         grid-area: footer;
       }
+      p {
+        color: #799bce;
+      }
     `}
   </Style>
   <ShoppingCart />
- </React.StrictMode>,
- document.getElementById("root")
-
+  </React.StrictMode>,
+  document.getElementById("root")
 );
