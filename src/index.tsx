@@ -53,6 +53,11 @@ ReactDOM.render(
         -webkit-text-size-adjust: 100%;
         -webkit-tap-highlight-color: rgba(0,0,0,0);
         -webkit-font-smoothing: antialiased;
+
+        @media only screen and (min-width: 992px) {
+          width: 992px;
+          margin: 0 auto;
+        }
       }
       header {
         grid-area: header;
