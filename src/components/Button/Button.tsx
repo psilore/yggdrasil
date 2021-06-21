@@ -1,20 +1,24 @@
 import * as React from 'react';
+import Counter from '../Counter/Counter'
 import { css, Styled } from 'react-css-in-js';
 
 interface Props {
-  onClick: () => void;
+  onClick:(e:any) => void,
+  children
 }
 
-const color = 'rgb(24, 42, 68)';
-
-const Button: React.FC<Props> = ({
-    children,
-    onClick
-  }) => { 
-  return (
+export default class Button extends React.Component<any,Props>  {
+  constructor(props: any) {
+    super(props);
+  }
+  
+  render() {
+    return (
       <Styled>
         {css`
-          display: inline-block;
+          position: relative;
+          display: inline-flex;
+          appearance: none;
           font-weight: 400;
           text-align: center;
           text-decoration: none;
@@ -22,20 +26,18 @@ const Button: React.FC<Props> = ({
           cursor: pointer;
           user-select: none;
           background-color: transparent;
-          border: 1px solid ${color};
+          border: 1px solid rgb(120, 143, 178);
           padding: .75rem .75rem;
           font-size: 1rem;
-          border-radius: .45em;
-          margin-left:auto;
-          transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;&:hover {
-            color: ${color};
-          }
+          border-radius: .75em;
+          margin-left: auto;
+          transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
         `}
-        <button onClick={onClick}>
-          {children}
+        <button onClick={this.props.onClick}>
+          <Counter total={this.props.total}/>
+          {this.props.children}
         </button>
       </Styled>
-  );
+    );
+  }
 }
-
-export default Button;

@@ -1,13 +1,59 @@
 import * as React from 'react';
 import Button from './components/Button/Button';
 import Products from './components/Products/Products';
+import ShoppingCart from './components/ShoppingCart/ShoppingCart';
 import Cart from './components/Icons/Cart'
 
 import { css, Styled } from 'react-css-in-js';
 
-export default class ShoppingCart extends React.Component {
+interface Props {
+  active: boolean,
+  id: number,
+  total: string,
+  cart: []
+}
+
+export default class App extends React.Component<any,Props> {
+
+  constructor(props: any) {
+    super(props);
+
+    this.state = {
+      active: false,
+      id: 0,
+      total: "0",
+      cart: []
+    };
+
+    this.toggleCart = this.toggleCart.bind(this)
+    this.closeCart = this.closeCart.bind(this);
+  }
+
+  setCart = (childData) => {
+    console.log(childData)
+    this.setState({
+      cart: childData
+    })
+  }
+
+  setTotal = (childData) => {
+    this.setState({
+      total: childData
+    })
+  }
+
+  closeCart(){
+    this.toggleCart();
+  }
+
+  toggleCart() {
+    this.setState(prevState => ({ active: !prevState.active }));
+  }
 
   render() {
+
+    const { active } = this.state;
+
     return <Styled>
       {css`
         height: 100vh;
@@ -41,7 +87,8 @@ export default class ShoppingCart extends React.Component {
         <header>
           <nav>
             <Button 
-              onClick={() => console.log("Button clicked!")}
+              total={ this.state.total }
+              onClick={ this.toggleCart }
               children= { <Cart name="cart" color="white" size={24} /> }
             />
           </nav>
@@ -50,8 +97,9 @@ export default class ShoppingCart extends React.Component {
           <h2>Electronics & Computer peripherals </h2>
           <p>A diverse collection of the most awesome products on this side of the hemisphere.</p>
           <h4>Products</h4>
-          <Products />
+          <Products setTotal={ this.setTotal } setCart={ this.setCart }/>
         </main>
+        <ShoppingCart active={active} closeCart={this.closeCart.bind(this)} cart={ this.state.cart }/>
         <footer>
 
         </footer>

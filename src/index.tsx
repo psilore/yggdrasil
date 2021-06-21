@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import ShoppingCart from './ShoppingCart';
+import App from './App';
 import { css, Style } from 'react-css-in-js';
 
 ReactDOM.render(
@@ -83,9 +83,24 @@ ReactDOM.render(
         font-weight: 200;
         line-height: 1.3;
       }
+      aside.hidden {
+        visibility: hidden;
+        opacity: 0;
+        transform: translateX(0);
+        transition: all .3s ease-in-out;
+      }
+      aside.hidden .cart {
+        transform: translateX(calc(180vw - 100%));
+        transition: all .3s ease-in-out;
+      }
+      button div.hidden {
+        visibility: hidden;
+        opacity: 0;
+        transition: all .3s ease-in-out;
+      }
     `}
   </Style>
-  <ShoppingCart />
+  <App />
   </React.StrictMode>,
   document.getElementById("root")
 );

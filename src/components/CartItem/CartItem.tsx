@@ -1,35 +1,24 @@
 import * as React from 'react';
-import AddToCartButton from '../AddToCartButton/AddToCartButton';
 import { css, Styled } from 'react-css-in-js';
 
 interface Props {
-  image_url: string
   title: string
-  amount: string
-  currency: string
   id: string
-  item: [],
-  quantity: number
 }
-export default class Product extends React.Component<any,Props>  {
+
+export default class CartItem extends React.Component<any,Props>  {
+
   constructor(props: any) {
     super(props);
 
     this.state = {
-      image_url: "",
       title: "",
-      amount: "",
-      currency: "",
-      id: "",
-      item: [],
-      quantity: 0
+      id: ""
     };
 
   }
 
-
   render() {
-    const addToCart = this.props.addToCart;
     return (
       <Styled>
         {css`
@@ -69,18 +58,8 @@ export default class Product extends React.Component<any,Props>  {
             font-weight: bold;
           }
         `}
-        <div className="product">
-          <div className="product-image-group">
-            <img className="product-image" src={'http://localhost:8181' + this.props.image_url} />
-          </div>
-          <div className="product-title">{ this.props.title }</div>
-          <div className="product-meta-group">
-            <AddToCartButton 
-              onClick={() => addToCart(this.props.id, 1)}
-              children= "Add to cart"
-            />
-            <div className="product-price">{ this.props.currency } { this.props.amount }</div>
-          </div>
+        <div className="cart-item">
+          <div className="cart-item-title">{ this.props.title }</div>
         </div>
       </Styled>
     )
