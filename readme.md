@@ -1,11 +1,15 @@
 <br />
 <p align="center">
-  <a href="https://github.com/psilore/yggdrasil">
-    <img src="src/public/images/logo.png" alt="Logo" width="80" height="80">
-  </a>
+   <a href="https://github.com/psilore/yggdrasil">
+      <img src="src/public/images/logo.png" alt="Logo" width="80" height="80">
+   </a>
 
-  <h3 align="center">Yggdrasil - Avensia assignment</h3>
+   <h3 align="center">Yggdrasil - Avensia assignment</h3>
+   <br />
+   <br />
+   <img src="src/public/images/mockup-ave.jpg" alt="mockup"> 
 </p>
+
 
 ## Prerequisites
 
