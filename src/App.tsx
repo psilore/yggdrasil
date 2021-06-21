@@ -30,7 +30,6 @@ export default class App extends React.Component<any,Props> {
   }
 
   setCart = (childData) => {
-    console.log(childData)
     this.setState({
       cart: childData
     })
