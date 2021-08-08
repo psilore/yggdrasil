@@ -223,13 +223,22 @@ export default class CartItem extends React.Component<any,Props>  {
             justify-content: space-between;
             margin-right: 16px;
           }  
-          .cart-item-quantity button, .cart-remove-item button{
+          .cart-item-quantity button {
             background-color: rgb(15 32 56);
+            border: none;
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0;
-          } 
+          }  
+          .cart-remove-item button{
+            background-color: transparent;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+          }  
           .cart-item-price {
             max-width: 200px;
             display: flex;
@@ -267,7 +276,7 @@ export default class CartItem extends React.Component<any,Props>  {
           <div className="cart-remove-item">
             <Button 
               onClick={ () => this.deleteItem() }
-              children= { <Delete name="delete" color="white" size={12} /> }
+              children= { <Delete name="delete" color="#E05252" size={12} /> }
             />
           </div>
         </div>
