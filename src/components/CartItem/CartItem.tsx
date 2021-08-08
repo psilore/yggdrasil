@@ -1,7 +1,15 @@
 import * as React from 'react';
 import { css, Styled } from 'react-css-in-js';
+import Button from '../Button/Button';
+import Plus from '../Icons/Plus';
+import Minus from '../Icons/Minus';
+import Delete from '../Icons/Delete';
 
 interface Props {
+  baseUrl: any,
+  path: any,
+  cart: any,
+  myCart: any,
   title: string,
   id: string,
   imageUrl: string,
@@ -16,6 +24,10 @@ export default class CartItem extends React.Component<any,Props>  {
     super(props);
 
     this.state = {
+      baseUrl: 'http://localhost:8181/',
+      path: 'cart/',
+      cart: [],
+      myCart: [],
       title: "",
       id: "",
       imageUrl: "",
@@ -26,7 +38,115 @@ export default class CartItem extends React.Component<any,Props>  {
 
   }
 
+  async addItem() {
+    let id = this.props.id
+    console.log(id)
+    const encodedValue = encodeURIComponent(+ 1);
 
+    const endpoint = this.state.baseUrl + this.state.path + id + `?quantity=${encodedValue}`;
+
+    await fetch(endpoint, {
+      method: 'PUT',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(response => response.json())
+    .then(json => {
+
+
+      console.log(json.items[0])
+      const myCartWithTotal = this.getProductsTotal(json.items, this.props.myLanguage)
+      
+      /* this.setState({
+        cart: [...this.state.myCart, ...myCartWithTotal]
+      }) 
+
+      const sum = this.sumNumbers(myCartWithTotal) 
+
+      this.setSubTotal(sum)
+
+      this.updateCart(this.state.cart)  */
+      
+      
+
+    })
+    .catch(err => console.log('Request Failed', err));
+
+  }
+
+  removeItem() {
+
+  }
+
+  async deleteItem() {
+    let id = this.props.id
+    const endpoint = this.state.baseUrl + this.state.path + id;
+
+    await fetch(endpoint, {
+      method: 'DELETE',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(response => response.json())
+    .then(json => {
+
+      const myCartWithTotal = this.getProductsTotal(json.items, this.props.myLanguage)
+      
+      this.setState({
+        cart: [...this.state.myCart, ...myCartWithTotal]
+      })
+
+      const sum = this.sumNumbers(myCartWithTotal)
+
+      this.props.setSubTotal(sum)
+
+      this.updateCart(this.state.cart) 
+      
+
+    })
+    .catch(err => console.log('Request Failed', err));
+  }
+
+
+  updateCart(array) {
+    this.setState({ 
+      cart: [] 
+    })
+    this.props.setMyCart(array);
+  }
+
+  getProductsTotal(object, language) {
+    if(language == "sv_SE" || language == undefined) {
+      let result = object.map(data=>{
+        return {...data, sub_total: data.product.prices[0].amount*data.quantity};
+      })
+      return result
+    } else {
+      let result = object.map(data=>{
+        return {...data, sub_total: data.product.prices[1].amount*data.quantity};
+      })
+      return result
+    }
+  }
+
+  sumNumbers(object) {
+    let prices = [];
+    object.forEach(key => {
+      prices.push(key.sub_total)
+    })
+
+    if(prices.length != 0){
+      const sum = (acc, cur) => acc + cur;
+      return Math.round(prices.reduce(sum))
+    }
+
+  }
 
   render() {
     return (
@@ -45,27 +165,43 @@ export default class CartItem extends React.Component<any,Props>  {
             height: 56px;
             overflow: auto;
           }
-          .cart-item-img {
+          .cart-item-title {
             width: auto;
+            margin-right: 16px;
+          }
+          .cart-item-img {
+            width: 48px;
             height: 48px;
             margin-right: 16px;
           }
           .cart-item-quantity {
+            width: 110px;
             display: flex;
             flex-direction: row;
-            margin: 0 16px;
+            align-items: center;
+            justify-content: space-between;
+            margin-right: 16px;
           }  
-          .cart-item-quantity button {
-            width: 24px;
-            height: 24px;
-          } 
-          .cart-item-total {
+          .cart-item-quantity button, .cart-remove-item button{
+            background-color: rgb(15 32 56);
             display: flex;
+            align-items: center;
             justify-content: center;
-            width: 24px;
-            height: 24px;
-            font-weight: bold;
-          }    
+            margin: 0;
+          } 
+          .cart-item-price {
+            max-width: 200px;
+            display: flex;
+            justify-content: flex-end;
+            width: 120px;
+            margin-right: 16px;
+          }  
+          .cart-item-price span {
+            margin-right: 4px;
+          }  
+          .cart-item-total {
+            max-width: 100px;
+          }
         `}
         <div className="cart-item">
           <div className="cart-item-group">
@@ -73,13 +209,25 @@ export default class CartItem extends React.Component<any,Props>  {
             <div className="cart-item-title">{ this.props.title }</div>
           </div>
           <div className="cart-item-quantity">
-            <button>+</button>
-              <div className="cart-item-total">{ this.props.quantity }</div>
-            <button>-</button>
+            <Button 
+              onClick={ () => this.addItem() }
+              children= { <Plus name="plus" color="white" size={12} /> }
+            />
+            <div className="cart-item-total">{ this.props.quantity }</div>
+            <Button 
+              onClick={ () => this.removeItem() }
+              children= { <Minus name="minus" color="white" size={12} /> }
+            />
           </div>
           <div className="cart-item-price">
             <span>{ this.props.price }</span>
             <span>{ this.props.currency }</span>
+          </div>
+          <div className="cart-remove-item">
+            <Button 
+              onClick={ () => this.deleteItem() }
+              children= { <Delete name="delete" color="white" size={12} /> }
+            />
           </div>
         </div>
       </Styled>
