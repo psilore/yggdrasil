@@ -77,7 +77,7 @@ export default class Product extends React.Component<any,Props>  {
               onClick={() => addToCart(this.props.id, 1)}
               children= "Add to cart"
             />
-            <div className="product-price">{ this.props.currency } { this.props.amount }</div>
+            <div className="product-price">{ this.props.amount } { this.props.currency }</div>
           </div>
         </div>
       </Styled>

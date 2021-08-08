@@ -12,6 +12,7 @@ interface Props {
   cart: any,
   myCart: any,
   count: any
+  subTotal: any
 }
 
 export default class Products extends React.Component<any,Props> {
@@ -26,20 +27,18 @@ export default class Products extends React.Component<any,Props> {
       products: [],
       cart: [],
       myCart: [],
-      count: 1
+      count: 0,
+      subTotal: 0
     };
 
     this.getProducts = this.getProducts.bind(this);
     this.postItem = this.postItem.bind(this);
-    this.getCart = this.getCart.bind(this);
 
   }
 
   async componentDidMount() {
     const products = await this.getProducts();
     this.setState({ products });
-    this.getTotal()
-    this.getCart();
   }
 
   async getProducts() {
@@ -48,11 +47,6 @@ export default class Products extends React.Component<any,Props> {
     return data;
   }
 
-  async getCart() {
-    const res = await fetch(`http://localhost:8181/cart`);
-    const data = await res.json();
-    return data;
-  }
 
 
   async postItem(id) {
@@ -61,7 +55,7 @@ export default class Products extends React.Component<any,Props> {
 
     const endpoint = this.state.baseUrl + this.state.path + id + `?quantity=${encodedValue}`;
 
-    const res = await fetch(endpoint, {
+    await fetch(endpoint, {
       method: 'POST',
       credentials: 'include',
       headers: {
@@ -71,39 +65,80 @@ export default class Products extends React.Component<any,Props> {
     })
     .then(response => response.json())
     .then(json => {
-      this.setState({ 
-          cart: [...this.state.cart, ...json.items] 
-      })
 
+      const myCartWithTotal = this.getProductsTotal(json.items, this.props.myLanguage)
+      
+      this.setState({
+        cart: [...this.state.myCart, ...myCartWithTotal]
+      }) 
+
+      const sum = this.sumNumbers(myCartWithTotal) 
+
+      this.props.setSubTotal(sum);
       this.updateCart(this.state.cart)
 
       const items = Object.assign(json.items); 
-     
-      let array = [];
-      items.forEach(key => {
-        array.push(key.quantity)
-      })
+      const totalArray = this.getTotalItems(items)
 
-      const sum = array.reduce(function(a, b){
+      const sumItems = totalArray.reduce(function(a, b){
         return a + b;
       }, 0);
 
-      this.setState({ 
-          count: sum
-      })
+      this.props.setTotalItems(sumItems);
 
-      /* this.props.setMyCart(this.state.cart); */
-      
-      this.setTotalNumberOfItems(this.state.count)
+
     })
     .catch(err => console.log('Request Failed', err));
 
   }
 
-  setTotalNumberOfItems(number){
-    this.props.setTotal(number);
+  getTotalItems(object) {
+    let quantity = [];
+    object.forEach(key => {
+      quantity.push(key.quantity)
+    })
+    return quantity
   }
-  
+
+  getProductPrices(object) {
+    let prices = [];
+    object.forEach(key => {
+      prices.push(key.product.prices[0].amount)
+    })
+    return prices
+  }
+
+  getProductsTotal(object, language) {
+    if(language == "sv_SE" || language == undefined) {
+      let result = object.map(data=>{
+        return {...data, sub_total: data.product.prices[0].amount*data.quantity};
+      })
+      return result
+    } else {
+      let result = object.map(data=>{
+        return {...data, sub_total: data.product.prices[1].amount*data.quantity};
+      })
+      return result
+    }
+  }
+
+  getCurrency(object) {
+    let currency = "";
+    const language = this.props.myLanguage
+    if(language == "sv_SE" || language == undefined) {
+      object.forEach(key => {
+        currency = key.product.prices[0].currency
+      })
+      
+      return currency
+    } else {
+      object.forEach(key => {
+        currency = key.product.prices[1].currency
+      })
+      return currency
+    }  
+  }
+
   updateCart(array) {
     this.setState({ 
       cart: [] 
@@ -111,14 +146,19 @@ export default class Products extends React.Component<any,Props> {
     this.props.setMyCart(array);
   }
 
-  getTotal() {
-    const items = Object.assign(this.state.cart);
-    let array = [];
-    items.forEach(key => {
-      array.push(key.quantity)
-    })/* 
-    console.log(array) */
+  sumNumbers(object) {
+    let prices = [];
+    object.forEach(key => {
+      prices.push(key.sub_total)
+    })
+
+    if(prices.length != 0){
+      const sum = (acc, cur) => acc + cur;
+      return Math.round(prices.reduce(sum))
+    }
+
   }
+
 
   render() {
     return (
@@ -141,7 +181,7 @@ export default class Products extends React.Component<any,Props> {
                 image_url= {product.imageUrl}
                 title= {product.title}
                 currency={product.prices[0].currency}
-                amount= {product.prices[0].amount}
+                amount= {Math.round(product.prices[0].amount)}
                 id={product.id}
                 key={product.id}
               />

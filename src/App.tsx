@@ -11,13 +11,16 @@ interface Props {
   baseUrl: any,
   path: any,
   id: any,
-  total: any,
+  totalItems: any,
+  subTotal: any,
   products: any,
   cart: any,
-  myCart: any
+  myCart: any,
+  myLanguage: any
+  currency: any
 }
 
-export default class App extends React.Component<any,Props> {
+export default class App extends React.Component<any, Props> {
 
   constructor(props: any) {
     super(props);
@@ -27,39 +30,40 @@ export default class App extends React.Component<any,Props> {
       baseUrl: 'http://localhost:8181/',
       path: 'cart/',
       id: 0,
-      total: 0,
+      totalItems: 0,
+      subTotal: 0,
       products: [],
       cart: [],
       myCart: [],
+      myLanguage: "sv_SE",
+      currency: ""
     };
 
     this.toggleCart = this.toggleCart.bind(this);
     this.closeCart = this.closeCart.bind(this);
     this.getCart = this.getCart.bind(this);
-  } 
+  }
 
   async componentDidMount() {
     await this.initilizeCart();
   }
-  
-  async initilizeCart(){
+
+  async initilizeCart() {
     const cookie = this.getCookie("cart_id");
-    if(cookie == null || cookie.length == 0) {
-      console.log("no cookie!")
+    if (cookie == null || cookie.length == 0) {
+      console.log("no cookie! WHAT?")
     } else {
-      //console.log(this.getCookie("cart_id"))
 
+      const cartId = this.getCookie("cart_id")
+      console.log(`Current cart ID: ${cartId}`)
 
+      //TODO Store cart ID for caching cart
+      
+      console.log(this.state.myLanguage)
       this.getCart()
     }
-    
-    
-  }
 
-  getCookie(string) {
-      const regex = new RegExp(string + "=([^;]+)");
-      const value = regex.exec(document.cookie);
-      return (value != null) ? unescape(value[1]) : null;
+
   }
 
   setProducts = (childData) => {
@@ -72,20 +76,43 @@ export default class App extends React.Component<any,Props> {
     this.setState({
       myCart: childData
     })
+
+    console.log(this.state.myCart)
   }
 
-  setTotal = (childData) => {
+  setTotalItems = (childData) => {
     this.setState({
-      total: childData
+      totalItems: childData
     })
+    console.log(this.state.totalItems)
   }
 
-  closeCart(){
-    this.toggleCart();
+  setSubTotal = (childData) => {
+    this.setState({
+      subTotal: childData
+    })
+    console.log(this.state.subTotal)
   }
 
-  toggleCart() {
-    this.setState(prevState => ({ active: !prevState.active }));
+  setCurrency = (childData) => {
+    this.setState({
+      currency: childData
+    })
+    console.log(this.state.currency)
+  } 
+
+  getCookie(string) {
+    const regex = new RegExp(string + "=([^;]+)");
+    const value = regex.exec(document.cookie);
+    return (value != null) ? unescape(value[1]) : null;
+  }
+
+  getTotalItems(object) {
+    let quantity = [];
+    object.forEach(key => {
+      quantity.push(key.quantity)
+    })
+    return quantity
   }
 
   async getCart() {
@@ -99,16 +126,95 @@ export default class App extends React.Component<any,Props> {
         'Content-Type': 'application/json',
       }
     })
-    .then(response => response.json())
-    .then(json => {
+      .then(response => response.json())
+      .then(json => {
 
-      this.setState({ 
-          myCart: [...this.state.myCart, ...json.items] 
+        const myCartWithTotal = this.getProductsTotal(json.items, this.state.myLanguage)
+        
+        this.setState({
+          myCart: [...this.state.myCart, ...myCartWithTotal]
+        })
+
+        const subTotal = this.sumNumbers(myCartWithTotal)
+
+        this.setState({
+          subTotal: subTotal
+        })
+
+        const currency = this.getCurrency(this.state.myCart)
+
+        this.setState({
+          currency: currency
+        })
+
+        const items = Object.assign(json.items); 
+        const totalArray = this.getTotalItems(items)
+
+        const sumItems = totalArray.reduce(function(a, b){
+          return a + b;
+        }, 0);
+
+        this.setState({
+          totalItems: sumItems
+        })
+
+
       })
+      .catch(err => console.log('Request Failed', err));
+
+
+  }
+
+  getCurrency(object) {
+    let currency = "";
+    const language = this.state.myLanguage
+    if(language == "sv_SE" || language == undefined) {
+      object.forEach(key => {
+        currency = key.product.prices[0].currency
+      })
+      
+      return currency
+    } else {
+      object.forEach(key => {
+        currency = key.product.prices[1].currency
+      })
+      return currency
+    }  
+  }
+
+  getProductsTotal(object, language) {
+    if(language == "sv_SE" || language == undefined) {
+      let result = object.map(data=>{
+        return {...data, sub_total: data.product.prices[0].amount*data.quantity};
+      })
+      return result
+    } else {
+      let result = object.map(data=>{
+        return {...data, sub_total: data.product.prices[1].amount*data.quantity};
+      })
+      return result
+    }
+  }
+
+  sumNumbers(object) {
+    let prices = [];
+    object.forEach(key => {
+      prices.push(key.sub_total)
     })
-    .catch(err => console.log('Request Failed', err));
 
+    if(prices.length != 0){
+      const sum = (acc, cur) => acc + cur;
+      return Math.round(prices.reduce(sum))
+    }
 
+  }
+
+  closeCart() {
+    this.toggleCart();
+  }
+
+  toggleCart() {
+    this.setState(prevState => ({ active: !prevState.active }));
   }
 
   render() {
@@ -147,10 +253,10 @@ export default class App extends React.Component<any,Props> {
       <div>
         <header>
           <nav>
-            <Button 
-              total={ this.state.total }
-              onClick={ this.toggleCart }
-              children= { <Cart name="cart" color="white" size={24} /> }
+            <Button
+              total={this.state.totalItems}
+              onClick={this.toggleCart}
+              children={<Cart name="cart" color="white" size={24} />}
             />
           </nav>
         </header>
@@ -158,9 +264,9 @@ export default class App extends React.Component<any,Props> {
           <h2>Electronics & Computer peripherals </h2>
           <p>A diverse collection of the most awesome products on this side of the hemisphere.</p>
           <h4>Products</h4>
-          <Products setTotal={ this.setTotal } setProducts={ this.setProducts } setMyCart={ this.setMyCart }/>
+          <Products setTotalItems={this.setTotalItems} setSubTotal={this.setSubTotal} setCurrency={this.setCurrency} setProducts={this.setProducts} setMyCart={this.setMyCart} subTotal={this.state.subTotal}/>
         </main>
-        <ShoppingCart active={active} closeCart={this.closeCart.bind(this)} myCart={ this.state.myCart }/>
+        <ShoppingCart active={active} closeCart={this.closeCart.bind(this)} setSubTotal={this.setSubTotal} setMyCart={this.setMyCart} myCart={this.state.myCart} currency={this.state.currency} subTotal={this.state.subTotal} />
         <footer>
 
         </footer>
