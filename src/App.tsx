@@ -2,7 +2,8 @@ import * as React from 'react';
 import Button from './components/Button/Button';
 import Products from './components/Products/Products';
 import ShoppingCart from './components/ShoppingCart/ShoppingCart';
-import Cart from './components/Icons/Cart'
+import Cart from './components/Icons/Cart';
+import Flag from './components/Icons/Flag';
 
 import { css, Styled } from 'react-css-in-js';
 
@@ -55,6 +56,7 @@ export default class App extends React.Component<any, Props> {
     const cookie = this.getCookie("cart_id");
     if (cookie == null || cookie.length == 0) {
       console.log("no cookie! WHAT?")
+      this.getProducts()
     } else {
 
       const cartId = this.getCookie("cart_id")
@@ -268,6 +270,16 @@ export default class App extends React.Component<any, Props> {
           display: flex;
           flex-flow: row nowrap;
         }
+        nav button:first-child {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-right: 16px;
+          border: none;
+        }
+        nav button:last-child {
+          margin: 0;
+        }
         main {
           margin: 0 1em;
         }
@@ -275,6 +287,10 @@ export default class App extends React.Component<any, Props> {
       <div>
         <header>
           <nav>
+            <Button 
+              onClick={ () => console.log(this.state.myLanguage) }
+              children= { <Flag name="flag" width={24} height={19} /> }
+            />
             <Button
               total={this.state.totalItems}
               onClick={this.toggleCart}
