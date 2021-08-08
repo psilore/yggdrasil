@@ -26,9 +26,6 @@ export default class ShoppingCart extends React.Component<any,Props>  {
     };
 
   }
-  async componentDidMount() {
-
-  }
 
   render() {
     const closeCart = this.props.closeCart;
@@ -75,16 +72,24 @@ export default class ShoppingCart extends React.Component<any,Props>  {
         .cart-sub-total-group {
           display: flex;
           justify-content: flex-end;
-          font-weight: bold;
+          align-items: center;
+          font-size: 1.1em;
+          font-weight: 800;
+          line-height: 1.3;
+          height: 56px;
+          border-top: 1px solid #131d2d;
+          margin-top: 4px;
         }
         .cart-sub-total-title {
-          
+          color: rgb(255 255 255);
+          margin-right: 8px;
+          color: rgb(181 194 214);
         }
         .cart-sub-total {
           display: flex;
           justify-content: flex-end;
-          width: 120px;
           margin-right: 52px;
+          color: rgb(255 255 255);
         }
         .cart-sub-total span {
           margin-right: 4px;
@@ -108,11 +113,13 @@ export default class ShoppingCart extends React.Component<any,Props>  {
               imageUrl={cart.product.imageUrl}
               title={cart.product.title}
               quantity={cart.quantity}
-              price={Math.round(cart.product.prices[0].amount)}
+              price={cart.product.prices[0].amount}
               currency={this.props.currency}
               key={cart.product.id}
               setMyCart={this.props.setMyCart}
               setSubTotal={this.props.setSubTotal}
+              setTotalItems={this.props.setTotalItems} 
+              cart={this.props.myCart}
             /> 
           ))}
           {isCartEmpty ? (

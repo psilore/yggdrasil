@@ -47,8 +47,6 @@ export default class Products extends React.Component<any,Props> {
     return data;
   }
 
-
-
   async postItem(id) {
 
     const encodedValue = encodeURIComponent(1);
@@ -177,13 +175,13 @@ export default class Products extends React.Component<any,Props> {
         <div>
             {this.state.products.map((product: any) => (
               <Product
-                addToCart={this.postItem.bind(this.props.id)}
+                addToCart= {this.postItem.bind(this.props.id)}
                 image_url= {product.imageUrl}
                 title= {product.title}
-                currency={product.prices[0].currency}
-                amount= {Math.round(product.prices[0].amount)}
-                id={product.id}
-                key={product.id}
+                currency= {product.prices[0].currency}
+                amount= {product.prices[0].amount}
+                id= {product.id}
+                key= {product.id}
               />
             ))}
         </div>

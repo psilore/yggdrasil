@@ -41,9 +41,12 @@ export default class CartItem extends React.Component<any,Props>  {
   async addItem() {
     let id = this.props.id
     console.log(id)
-    const encodedValue = encodeURIComponent(+ 1);
 
-    const endpoint = this.state.baseUrl + this.state.path + id + `?quantity=${encodedValue}`;
+    let cart = this.props.cart
+    let result = cart.filter(data => data.product.id === id)
+    let currentQuantity = result[0].quantity
+    const quantity = currentQuantity + 1
+    const endpoint = this.state.baseUrl + this.state.path + id + '?quantity=' + quantity;
 
     await fetch(endpoint, {
       method: 'PUT',
@@ -56,28 +59,78 @@ export default class CartItem extends React.Component<any,Props>  {
     .then(response => response.json())
     .then(json => {
 
-
-      console.log(json.items[0])
       const myCartWithTotal = this.getProductsTotal(json.items, this.props.myLanguage)
       
-      /* this.setState({
+      this.setState({
         cart: [...this.state.myCart, ...myCartWithTotal]
       }) 
 
       const sum = this.sumNumbers(myCartWithTotal) 
 
-      this.setSubTotal(sum)
+      this.props.setSubTotal(sum)
 
-      this.updateCart(this.state.cart)  */
-      
-      
+      this.updateCart(this.state.cart)
+
+      const items = Object.assign(json.items); 
+      const totalArray = this.getTotalItems(items)
+
+      const sumItems = totalArray.reduce(function(a, b){
+        return a + b;
+      }, 0);
+
+      this.props.setTotalItems(sumItems);
 
     })
     .catch(err => console.log('Request Failed', err));
 
   }
 
-  removeItem() {
+  async removeItem() {
+    let id = this.props.id
+    console.log(id)
+
+    let cart = this.props.cart
+    let result = cart.filter(data => data.product.id === id)
+    let currentQuantity = result[0].quantity
+    if(currentQuantity >= 2) {
+      const quantity = currentQuantity - 1
+      const endpoint = this.state.baseUrl + this.state.path + id + '?quantity=' + quantity;
+
+      await fetch(endpoint, {
+        method: 'PUT',
+        credentials: 'include',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        }
+      })
+      .then(response => response.json())
+      .then(json => {
+
+        const myCartWithTotal = this.getProductsTotal(json.items, this.props.myLanguage)
+        
+        this.setState({
+          cart: [...this.state.myCart, ...myCartWithTotal]
+        }) 
+
+        const sum = this.sumNumbers(myCartWithTotal) 
+
+        this.props.setSubTotal(sum)
+
+        this.updateCart(this.state.cart) 
+        
+        const items = Object.assign(json.items); 
+        const totalArray = this.getTotalItems(items)
+
+        const sumItems = totalArray.reduce(function(a, b){
+          return a + b;
+        }, 0);
+
+        this.props.setTotalItems(sumItems);
+
+      })
+      .catch(err => console.log('Request Failed', err));    
+    }
 
   }
 
@@ -107,7 +160,15 @@ export default class CartItem extends React.Component<any,Props>  {
       this.props.setSubTotal(sum)
 
       this.updateCart(this.state.cart) 
-      
+
+      const items = Object.assign(json.items); 
+      const totalArray = this.getTotalItems(items)
+
+      const sumItems = totalArray.reduce(function(a, b){
+        return a + b;
+      }, 0);
+
+      this.props.setTotalItems(sumItems);
 
     })
     .catch(err => console.log('Request Failed', err));
@@ -119,6 +180,14 @@ export default class CartItem extends React.Component<any,Props>  {
       cart: [] 
     })
     this.props.setMyCart(array);
+  }
+  
+  getTotalItems(object) {
+    let quantity = [];
+    object.forEach(key => {
+      quantity.push(key.quantity)
+    })
+    return quantity
   }
 
   getProductsTotal(object, language) {
@@ -168,6 +237,7 @@ export default class CartItem extends React.Component<any,Props>  {
           .cart-item-title {
             width: auto;
             margin-right: 16px;
+            color: rgb(155, 181, 220);
           }
           .cart-item-img {
             width: 48px;

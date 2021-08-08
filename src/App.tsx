@@ -76,29 +76,24 @@ export default class App extends React.Component<any, Props> {
     this.setState({
       myCart: childData
     })
-
-    console.log(this.state.myCart)
   }
 
   setTotalItems = (childData) => {
     this.setState({
       totalItems: childData
     })
-    console.log(this.state.totalItems)
   }
 
   setSubTotal = (childData) => {
     this.setState({
       subTotal: childData
     })
-    console.log(this.state.subTotal)
   }
 
   setCurrency = (childData) => {
     this.setState({
       currency: childData
     })
-    console.log(this.state.currency)
   } 
 
   getCookie(string) {
@@ -172,7 +167,6 @@ export default class App extends React.Component<any, Props> {
       object.forEach(key => {
         currency = key.product.prices[0].currency
       })
-      
       return currency
     } else {
       object.forEach(key => {
@@ -206,7 +200,6 @@ export default class App extends React.Component<any, Props> {
       const sum = (acc, cur) => acc + cur;
       return Math.round(prices.reduce(sum))
     }
-
   }
 
   closeCart() {
@@ -266,7 +259,7 @@ export default class App extends React.Component<any, Props> {
           <h4>Products</h4>
           <Products setTotalItems={this.setTotalItems} setSubTotal={this.setSubTotal} setCurrency={this.setCurrency} setProducts={this.setProducts} setMyCart={this.setMyCart} subTotal={this.state.subTotal}/>
         </main>
-        <ShoppingCart active={active} closeCart={this.closeCart.bind(this)} setSubTotal={this.setSubTotal} setMyCart={this.setMyCart} myCart={this.state.myCart} currency={this.state.currency} subTotal={this.state.subTotal} />
+        <ShoppingCart active={active} closeCart={this.closeCart.bind(this)} setTotalItems={this.setTotalItems} setSubTotal={this.setSubTotal} setMyCart={this.setMyCart} myCart={this.state.myCart} currency={this.state.currency} subTotal={this.state.subTotal} />
         <footer>
 
         </footer>
