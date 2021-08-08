@@ -92,6 +92,7 @@ export default class ShoppingCart extends React.Component<any,Props>  {
           justify-content: flex-end;
           margin-right: 52px;
           color: rgb(255 255 255);
+          width: 104px;
         }
         .cart-sub-total span {
           margin-right: 4px;

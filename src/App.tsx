@@ -6,6 +6,7 @@ import Cart from './components/Icons/Cart';
 import Flag from './components/Icons/Flag';
 
 import { css, Styled } from 'react-css-in-js';
+import { useEffect } from 'react';
 
 interface Props {
   active: boolean,
@@ -19,7 +20,8 @@ interface Props {
   myCart: any,
   myLanguage: any,
   currency: any,
-  amount: any
+  amount: any,
+  isLoaded: boolean
 }
 
 export default class App extends React.Component<any, Props> {
@@ -39,23 +41,24 @@ export default class App extends React.Component<any, Props> {
       myCart: [],
       myLanguage: "sv_SE",
       currency: "",
-      amount: ""
+      amount: "",
+      isLoaded: false
     };
 
     this.toggleCart = this.toggleCart.bind(this);
     this.closeCart = this.closeCart.bind(this);
-    this.getCart = this.getCart.bind(this);
-    this.getProducts = this.getProducts.bind(this);
+    this.initilizeCart = this.initilizeCart.bind(this); 
   }
 
   async componentDidMount() {
-    await this.initilizeCart();
+      await this.initilizeCart();
   }
 
   async initilizeCart() {
     const cookie = this.getCookie("cart_id");
     if (cookie == null || cookie.length == 0) {
       console.log("no cookie! WHAT?")
+      this.getCart()
       this.getProducts()
     } else {
 
@@ -106,11 +109,26 @@ export default class App extends React.Component<any, Props> {
   }
 
   async getProducts() {
-    const res = await fetch(`http://localhost:8181/products`);
-    const data = await res.json();
-    this.setState({
-      products: data
+    const url = this.state.baseUrl + 'products'
+
+    await fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
     })
+      .then(response => response.json())
+      .then(json => {
+        this.setState({
+          isLoaded: true,
+          products: json
+        })
+      })
+      .catch(err => console.log('Request Failed', err));
+
+    
   }
 
   async getCart() {
@@ -244,7 +262,7 @@ export default class App extends React.Component<any, Props> {
   render() {
 
     const { active } = this.state;
-
+    const products = this.state.products
     return <Styled>
       {css`
         height: 100vh;
@@ -299,7 +317,7 @@ export default class App extends React.Component<any, Props> {
           </nav>
         </header>
         <main>
-          <h2>Electronics & Computer peripherals </h2>
+          <h2>Electronics & Computer peripherals</h2>
           <p>A diverse collection of the most awesome products on this side of the hemisphere.</p>
           <h4>Products</h4>
           <Products setTotalItems={this.setTotalItems} setSubTotal={this.setSubTotal} setCurrency={this.setCurrency} setProducts={this.setProducts} setMyCart={this.setMyCart} subTotal={this.state.subTotal} myLanguage={this.state.myLanguage} products={this.state.products}/>
