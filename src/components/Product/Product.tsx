@@ -1,15 +1,15 @@
 import * as React from 'react';
 import AddToCartButton from '../AddToCartButton/AddToCartButton';
 import { css, Styled } from 'react-css-in-js';
+import { useState } from 'react';
 
 interface Props {
   image_url: string
   title: string
   amount: string
   currency: string
-  id: string
-  item: [],
-  quantity: number
+  id: number
+  count: number
 }
 export default class Product extends React.Component<any,Props>  {
   constructor(props: any) {
@@ -20,16 +20,14 @@ export default class Product extends React.Component<any,Props>  {
       title: "",
       amount: "",
       currency: "",
-      id: "",
-      item: [],
-      quantity: 0
+      id: 1,
+      count: 1
     };
-
   }
-
 
   render() {
     const addToCart = this.props.addToCart;
+    
     return (
       <Styled>
         {css`

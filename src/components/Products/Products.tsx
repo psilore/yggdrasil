@@ -1,38 +1,45 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import { css, Styled } from 'react-css-in-js';
-import Product from '../Product/Product'
+import Product from '../Product/Product';
+import axios, { AxiosResponse } from 'axios';
+
 
 interface Props {
-  products: string[],
-  cart: string[]
-  quantity: number
+  loading: any,
+  baseUrl: any,
+  path: any,
+  products: any,
+  cart: any,
+  myCart: any,
+  count: any
 }
 
-/* const Product = ({ title }:any) => (
-  <div className="card">
-    <p>{title}</p>
-  </div>
-); */
-
 export default class Products extends React.Component<any,Props> {
+
   constructor(props: any) {
     super(props);
 
     this.state = {
+      loading: Boolean,
+      baseUrl: 'http://localhost:8181/',
+      path: 'cart/',
       products: [],
       cart: [],
-      quantity: 0,
+      myCart: [],
+      count: 1
     };
 
     this.getProducts = this.getProducts.bind(this);
     this.postItem = this.postItem.bind(this);
-    this.countTotalItemsInCart = this.countTotalItemsInCart.bind(this);
+    this.getCart = this.getCart.bind(this);
+
   }
 
-  countTotalItemsInCart() {
-    const cart = this.state.cart;
-    const total = cart.length.toString()
-    
+  async componentDidMount() {
+    const products = await this.getProducts();
+    this.setState({ products });
+    this.getTotal()
+    this.getCart();
   }
 
   async getProducts() {
@@ -41,31 +48,77 @@ export default class Products extends React.Component<any,Props> {
     return data;
   }
 
-  async componentDidMount() {
-    const products = await this.getProducts();
-    this.setState({ products });  
+  async getCart() {
+    const res = await fetch(`http://localhost:8181/cart`);
+    const data = await res.json();
+    return data;
   }
 
-  async postItem(id,quantity) {
-    const endpoint = 'http://localhost:8181/cart/' + id + '?quantity=' + quantity;
+
+  async postItem(id) {
+
+    const encodedValue = encodeURIComponent(1);
+
+    const endpoint = this.state.baseUrl + this.state.path + id + `?quantity=${encodedValue}`;
+
     const res = await fetch(endpoint, {
       method: 'POST',
+      credentials: 'include',
       headers: {
-        'Content-Type': 'application/json'
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
       }
     })
-    const data = await res.json();
-    if (res.ok) {
+    .then(response => response.json())
+    .then(json => {
       this.setState({ 
-          cart: [...this.state.cart, data] 
+          cart: [...this.state.cart, ...json.items] 
       })
-      const cart = this.state.cart;
-      /* this.props.setCart(cart); */
-      const total = cart.length.toString()
-      this.props.setTotal(total);
-    }
+
+      this.updateCart(this.state.cart)
+
+      const items = Object.assign(json.items); 
+     
+      let array = [];
+      items.forEach(key => {
+        array.push(key.quantity)
+      })
+
+      const sum = array.reduce(function(a, b){
+        return a + b;
+      }, 0);
+
+      this.setState({ 
+          count: sum
+      })
+
+      /* this.props.setMyCart(this.state.cart); */
+      
+      this.setTotalNumberOfItems(this.state.count)
+    })
+    .catch(err => console.log('Request Failed', err));
+
   }
 
+  setTotalNumberOfItems(number){
+    this.props.setTotal(number);
+  }
+  
+  updateCart(array) {
+    this.setState({ 
+      cart: [] 
+    })
+    this.props.setMyCart(array);
+  }
+
+  getTotal() {
+    const items = Object.assign(this.state.cart);
+    let array = [];
+    items.forEach(key => {
+      array.push(key.quantity)
+    })/* 
+    console.log(array) */
+  }
 
   render() {
     return (
@@ -84,7 +137,7 @@ export default class Products extends React.Component<any,Props> {
         <div>
             {this.state.products.map((product: any) => (
               <Product
-                addToCart={this.postItem.bind(this)}
+                addToCart={this.postItem.bind(this.props.id)}
                 image_url= {product.imageUrl}
                 title= {product.title}
                 currency={product.prices[0].currency}
@@ -98,3 +151,4 @@ export default class Products extends React.Component<any,Props> {
     );
   }
 }
+

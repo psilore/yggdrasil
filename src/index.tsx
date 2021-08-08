@@ -93,6 +93,10 @@ ReactDOM.render(
         transform: translateX(calc(180vw - 100%));
         transition: all .3s ease-in-out;
       }
+      div.hidden {
+        visibility: hidden;
+        opacity: 0;
+      }
       button div.hidden {
         visibility: hidden;
         opacity: 0;

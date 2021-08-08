@@ -8,9 +8,13 @@ import { css, Styled } from 'react-css-in-js';
 
 interface Props {
   active: boolean,
-  id: number,
-  total: string,
-  cart: []
+  baseUrl: any,
+  path: any,
+  id: any,
+  total: any,
+  products: any,
+  cart: any,
+  myCart: any
 }
 
 export default class App extends React.Component<any,Props> {
@@ -20,18 +24,53 @@ export default class App extends React.Component<any,Props> {
 
     this.state = {
       active: false,
+      baseUrl: 'http://localhost:8181/',
+      path: 'cart/',
       id: 0,
-      total: "0",
-      cart: []
+      total: 0,
+      products: [],
+      cart: [],
+      myCart: [],
     };
 
-    this.toggleCart = this.toggleCart.bind(this)
+    this.toggleCart = this.toggleCart.bind(this);
     this.closeCart = this.closeCart.bind(this);
+    this.getCart = this.getCart.bind(this);
+  } 
+
+  async componentDidMount() {
+    await this.initilizeCart();
+  }
+  
+  async initilizeCart(){
+    const cookie = this.getCookie("cart_id");
+    if(cookie == null || cookie.length == 0) {
+      console.log("no cookie!")
+    } else {
+      //console.log(this.getCookie("cart_id"))
+
+
+      this.getCart()
+    }
+    
+    
   }
 
-  setCart = (childData) => {
+  getCookie(string) {
+      const regex = new RegExp(string + "=([^;]+)");
+      const value = regex.exec(document.cookie);
+      return (value != null) ? unescape(value[1]) : null;
+  }
+
+  setProducts = (childData) => {
     this.setState({
-      cart: childData
+      products: childData
+    })
+  }
+
+  setMyCart = (childData) => {
+    this.setState({
+      myCart: childData
     })
   }
 
@@ -47,6 +86,29 @@ export default class App extends React.Component<any,Props> {
 
   toggleCart() {
     this.setState(prevState => ({ active: !prevState.active }));
+  }
+
+  async getCart() {
+    const url = this.state.baseUrl + this.state.path
+
+    await fetch(url, {
+      method: 'GET',
+      credentials: 'include',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(response => response.json())
+    .then(json => {
+
+      this.setState({ 
+          myCart: [...this.state.myCart, ...json.items] 
+      })
+    })
+    .catch(err => console.log('Request Failed', err));
+
+
   }
 
   render() {
@@ -96,9 +158,9 @@ export default class App extends React.Component<any,Props> {
           <h2>Electronics & Computer peripherals </h2>
           <p>A diverse collection of the most awesome products on this side of the hemisphere.</p>
           <h4>Products</h4>
-          <Products setTotal={ this.setTotal } setCart={ this.setCart }/>
+          <Products setTotal={ this.setTotal } setProducts={ this.setProducts } setMyCart={ this.setMyCart }/>
         </main>
-        <ShoppingCart active={active} closeCart={this.closeCart.bind(this)} cart={ this.state.cart }/>
+        <ShoppingCart active={active} closeCart={this.closeCart.bind(this)} myCart={ this.state.myCart }/>
         <footer>
 
         </footer>

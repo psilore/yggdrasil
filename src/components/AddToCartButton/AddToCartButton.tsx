@@ -1,15 +1,19 @@
 import * as React from 'react';
 import { css, Styled } from 'react-css-in-js';
 
+
 interface Props {
-  onClick:  (e:any) => void;
+  onClick:(e:any) => void,
+  children
 }
 
-const AddToCartButton: React.FC<Props> = ({
-    children,
-    onClick
-  }) => { 
-  return (
+export default class AddToCartButton extends React.Component<any,Props>  {
+  constructor(props: any) {
+    super(props);
+  }
+  
+  render() {
+    return (
       <Styled>
         {css`
           font-family: inherit;
@@ -28,11 +32,10 @@ const AddToCartButton: React.FC<Props> = ({
           padding: .3em 0;
           border-radius: .45em;
         `}
-        <button onClick={onClick}>
-          {children}
+        <button onClick={this.props.onClick}>
+          {this.props.children}
         </button>
       </Styled>
-  );
+    );
+  }
 }
-
-export default AddToCartButton;

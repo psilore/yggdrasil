@@ -4,30 +4,36 @@ import Cross from '../Icons/Cross'
 import CartItem from '../CartItem/CartItem'
 import Counter from '../Counter/Counter'
 import { css, Styled } from 'react-css-in-js';
+import { useState } from 'react';
 
 
 interface Props {
-  id: string,
-  summery: []
+  myCart: any,
+  total: any
 }
+
 
 export default class ShoppingCart extends React.Component<any,Props>  {
   constructor(props: any) {
     super(props);
+
     this.state = {
-      id: "",
-      summery: []
+      myCart: [],
+      total: 0
     };
 
   }
-
   async componentDidMount() {
-    
+    /* this.setState({ 
+        myCart: this.props.myCart
+    })
+    this.setState({ 
+        total: this.props.total
+    })  */
   }
 
   render() {
     const closeCart = this.props.closeCart;
-
     return <Styled >
       {css`
         visibility: visible;
@@ -53,7 +59,7 @@ export default class ShoppingCart extends React.Component<any,Props>  {
           transform: translateX(calc(100vw - 100%));
           transition: all .3s ease-in-out;
           @media only screen and (min-width: 992px) {
-            width: 460px;
+            width: 580px;
           }
         }
         nav {
@@ -67,23 +73,33 @@ export default class ShoppingCart extends React.Component<any,Props>  {
           margin-left: auto;
         }
       `}
-      <aside className={`${this.props.active ? "" : "hidden"}`}>
+      <aside className={`${this.props.active ? "" : "hidden"}`} >
         <div className="cart">
           <nav>
             <Button 
-              total={ this.props.total }
+              total={ this.state.total }
               onClick={ () => closeCart() }
               children= { <Cross name="cross" color="white" size={24} /> }
             />
           </nav>
-          <h2>My cart</h2>
-          <div>{this.props.cart}</div>
-            {/* { this.props.cart.map((item: any) => (
-              <CartItem
-                title= {item.title}
-                key={item.title}
-              />
-            ))} */}
+          <div className="cart-total">
+            <h2>My cart</h2>
+          </div>
+          {this.props.myCart.map((cart) => (
+            <CartItem
+              imageUrl={cart.product.imageUrl}
+              title={cart.product.title}
+              quantity={cart.quantity}
+              price={cart.product.prices[0].amount}
+              currency={cart.product.prices[0].currency}
+              key={cart.product.id}
+            /> 
+          ))}
+
+          <div className="cart-total">
+            <div>Total: </div>
+            <div></div>
+          </div>
         </div>
       </aside>
     </Styled>

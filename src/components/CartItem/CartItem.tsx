@@ -2,8 +2,12 @@ import * as React from 'react';
 import { css, Styled } from 'react-css-in-js';
 
 interface Props {
-  title: string
-  id: string
+  title: string,
+  id: string,
+  imageUrl: string,
+  quantity:string,
+  price:string,
+  currency:string
 }
 
 export default class CartItem extends React.Component<any,Props>  {
@@ -13,53 +17,70 @@ export default class CartItem extends React.Component<any,Props>  {
 
     this.state = {
       title: "",
-      id: ""
+      id: "",
+      imageUrl: "",
+      quantity: "",
+      price: "",
+      currency: ""
     };
 
   }
+
+
 
   render() {
     return (
       <Styled>
         {css`
-          border-radius: .45em;
           display: flex;
-          flex-flow: column nowrap;
-          .product-image-group {
-            background: rgb(7, 16, 29);
-            border-radius: .45em;
-            overflow: hidden;
-            position: relative;
-            height: 180px;
+          flex-direction: row;
+          justify-content: space-between;
+          align-items: center;
+          .cart-item-group {
+            display: flex;
+            flex-direction: row;
+            justify-content: flex-start;
+            align-items: center;
+            flex: 1;
+            height: 56px;
+            overflow: auto;
           }
-          .product-image {
+          .cart-item-img {
             width: auto;
-            height: 7em;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            height: 48px;
+            margin-right: 16px;
           }
-          .product-title {  
-            color: rgb(155, 181, 220);  
-            font-size: 1em;
-            letter-spacing: 0.0523em;
-            font-weight: 200;
-            line-height: 1.2;
-            margin-top: .55em;
-            margin-bottom: .45em;
-          }
-          .product-meta-group {
-            margin-top: auto;
-            text-align: right;
-          }
-          .product-price {
-            color: white;
+          .cart-item-quantity {
+            display: flex;
+            flex-direction: row;
+            margin: 0 16px;
+          }  
+          .cart-item-quantity button {
+            width: 24px;
+            height: 24px;
+          } 
+          .cart-item-total {
+            display: flex;
+            justify-content: center;
+            width: 24px;
+            height: 24px;
             font-weight: bold;
-          }
+          }    
         `}
         <div className="cart-item">
-          <div className="cart-item-title">{ this.props.title }</div>
+          <div className="cart-item-group">
+            <img className="cart-item-img" src={'http://localhost:8181' + this.props.imageUrl} alt="" />
+            <div className="cart-item-title">{ this.props.title }</div>
+          </div>
+          <div className="cart-item-quantity">
+            <button>+</button>
+              <div className="cart-item-total">{ this.props.quantity }</div>
+            <button>-</button>
+          </div>
+          <div className="cart-item-price">
+            <span>{ this.props.price }</span>
+            <span>{ this.props.currency }</span>
+          </div>
         </div>
       </Styled>
     )
