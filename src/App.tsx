@@ -59,7 +59,6 @@ export default class App extends React.Component<any, Props> {
 
       //TODO Store cart ID for caching cart
       
-      console.log(this.state.myLanguage)
       this.getCart()
     }
 
@@ -102,14 +101,6 @@ export default class App extends React.Component<any, Props> {
     return (value != null) ? unescape(value[1]) : null;
   }
 
-  getTotalItems(object) {
-    let quantity = [];
-    object.forEach(key => {
-      quantity.push(key.quantity)
-    })
-    return quantity
-  }
-
   async getCart() {
     const url = this.state.baseUrl + this.state.path
 
@@ -142,15 +133,10 @@ export default class App extends React.Component<any, Props> {
           currency: currency
         })
 
-        const items = Object.assign(json.items); 
-        const totalArray = this.getTotalItems(items)
-
-        const sumItems = totalArray.reduce(function(a, b){
-          return a + b;
-        }, 0);
+        const totalItems = this.getTotalItems(json.items)
 
         this.setState({
-          totalItems: sumItems
+          totalItems: totalItems
         })
 
 
@@ -158,6 +144,18 @@ export default class App extends React.Component<any, Props> {
       .catch(err => console.log('Request Failed', err));
 
 
+  }  
+
+  getTotalItems(object) {
+    const items = Object.assign(object); 
+    let array = [];
+    items.forEach(key => {
+      array.push(key.quantity)
+    })
+    const sumItems = array.reduce(function(a, b){
+      return a + b;
+    }, 0);
+    return sumItems
   }
 
   getCurrency(object) {

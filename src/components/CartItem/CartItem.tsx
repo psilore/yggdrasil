@@ -161,14 +161,8 @@ export default class CartItem extends React.Component<any,Props>  {
 
       this.updateCart(this.state.cart) 
 
-      const items = Object.assign(json.items); 
-      const totalArray = this.getTotalItems(items)
+      this.props.setTotalItems(this.getTotalItems(json.items));
 
-      const sumItems = totalArray.reduce(function(a, b){
-        return a + b;
-      }, 0);
-
-      this.props.setTotalItems(sumItems);
 
     })
     .catch(err => console.log('Request Failed', err));
@@ -183,11 +177,15 @@ export default class CartItem extends React.Component<any,Props>  {
   }
   
   getTotalItems(object) {
-    let quantity = [];
-    object.forEach(key => {
-      quantity.push(key.quantity)
+    const items = Object.assign(object); 
+    let array = [];
+    items.forEach(key => {
+      array.push(key.quantity)
     })
-    return quantity
+    const sumItems = array.reduce(function(a, b){
+      return a + b;
+    }, 0);
+    return sumItems
   }
 
   getProductsTotal(object, language) {
