@@ -9,13 +9,7 @@ interface Props {
   baseUrl: any,
   path: any,
   cart: any,
-  myCart: any,
-  title: string,
-  id: string,
-  imageUrl: string,
-  quantity:string,
-  price:string,
-  currency:string
+  myCart: any
 }
 
 export default class CartItem extends React.Component<any,Props>  {
@@ -27,20 +21,13 @@ export default class CartItem extends React.Component<any,Props>  {
       baseUrl: 'http://localhost:8181/',
       path: 'cart/',
       cart: [],
-      myCart: [],
-      title: "",
-      id: "",
-      imageUrl: "",
-      quantity: "",
-      price: "",
-      currency: ""
+      myCart: []
     };
 
   }
 
   async addItem() {
     let id = this.props.id
-    console.log(id)
 
     let cart = this.props.cart
     let result = cart.filter(data => data.product.id === id)
@@ -80,7 +67,6 @@ export default class CartItem extends React.Component<any,Props>  {
 
   async removeItem() {
     let id = this.props.id
-    console.log(id)
 
     let cart = this.props.cart
     let result = cart.filter(data => data.product.id === id)
@@ -202,6 +188,7 @@ export default class CartItem extends React.Component<any,Props>  {
   }
 
   render() {
+
     return (
       <Styled>
         {css`

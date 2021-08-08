@@ -7,12 +7,9 @@ import axios, { AxiosResponse } from 'axios';
 interface Props {
   loading: any,
   baseUrl: any,
-  path: any,
-  products: any,
+  path: any
   cart: any,
-  myCart: any,
-  count: any
-  subTotal: any
+  myCart: any
 }
 
 export default class Products extends React.Component<any,Props> {
@@ -24,27 +21,13 @@ export default class Products extends React.Component<any,Props> {
       loading: Boolean,
       baseUrl: 'http://localhost:8181/',
       path: 'cart/',
-      products: [],
       cart: [],
-      myCart: [],
-      count: 0,
-      subTotal: 0
+      myCart: []
     };
 
-    this.getProducts = this.getProducts.bind(this);
+
     this.postItem = this.postItem.bind(this);
 
-  }
-
-  async componentDidMount() {
-    const products = await this.getProducts();
-    this.setState({ products });
-  }
-
-  async getProducts() {
-    const res = await fetch(`http://localhost:8181/products`);
-    const data = await res.json();
-    return data;
   }
 
   async postItem(id) {
@@ -92,14 +75,6 @@ export default class Products extends React.Component<any,Props> {
       return a + b;
     }, 0);
     return sumItems
-  }
-
-  getProductPrices(object) {
-    let prices = [];
-    object.forEach(key => {
-      prices.push(key.product.prices[0].amount)
-    })
-    return prices
   }
 
   getProductsTotal(object, language) {
@@ -153,8 +128,9 @@ export default class Products extends React.Component<any,Props> {
 
   }
 
-
   render() {
+    const language = this.props.myLanguage == "sv_SE"
+    
     return (
       <Styled>
         {css`
@@ -168,19 +144,35 @@ export default class Products extends React.Component<any,Props> {
             grid-gap: 1em;
           }
         `}
-        <div>
-            {this.state.products.map((product: any) => (
-              <Product
-                addToCart= {this.postItem.bind(this.props.id)}
-                image_url= {product.imageUrl}
-                title= {product.title}
-                currency= {product.prices[0].currency}
-                amount= {product.prices[0].amount}
-                id= {product.id}
-                key= {product.id}
-              />
-            ))}
-        </div>
+        {language ? (
+          <div>
+              {this.props.products.map((product: any) => (
+                <Product
+                  addToCart= {this.postItem.bind(this.props.id)}
+                  image_url= {product.imageUrl}
+                  title= {product.title}
+                  currency= {product.prices[0].currency}
+                  amount= {product.prices[0].amount}
+                  id= {product.id}
+                  key= {product.id}
+                />
+              ))}
+          </div>
+        ) : (
+          <div>
+              {this.props.products.map((product: any) => (
+                <Product
+                  addToCart= {this.postItem.bind(this.props.id)}
+                  image_url= {product.imageUrl}
+                  title= {product.title}
+                  currency= {product.prices[1].currency}
+                  amount= {product.prices[1].amount}
+                  id= {product.id}
+                  key= {product.id}
+                />
+              ))}
+          </div>
+        )}
       </Styled>
     );
   }

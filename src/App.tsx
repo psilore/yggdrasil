@@ -16,8 +16,9 @@ interface Props {
   products: any,
   cart: any,
   myCart: any,
-  myLanguage: any
-  currency: any
+  myLanguage: any,
+  currency: any,
+  amount: any
 }
 
 export default class App extends React.Component<any, Props> {
@@ -36,12 +37,14 @@ export default class App extends React.Component<any, Props> {
       cart: [],
       myCart: [],
       myLanguage: "sv_SE",
-      currency: ""
+      currency: "",
+      amount: ""
     };
 
     this.toggleCart = this.toggleCart.bind(this);
     this.closeCart = this.closeCart.bind(this);
     this.getCart = this.getCart.bind(this);
+    this.getProducts = this.getProducts.bind(this);
   }
 
   async componentDidMount() {
@@ -60,9 +63,8 @@ export default class App extends React.Component<any, Props> {
       //TODO Store cart ID for caching cart
       
       this.getCart()
+      this.getProducts()
     }
-
-
   }
 
   setProducts = (childData) => {
@@ -101,6 +103,14 @@ export default class App extends React.Component<any, Props> {
     return (value != null) ? unescape(value[1]) : null;
   }
 
+  async getProducts() {
+    const res = await fetch(`http://localhost:8181/products`);
+    const data = await res.json();
+    this.setState({
+      products: data
+    })
+  }
+
   async getCart() {
     const url = this.state.baseUrl + this.state.path
 
@@ -131,6 +141,11 @@ export default class App extends React.Component<any, Props> {
 
         this.setState({
           currency: currency
+        })
+        const amount = this.getAmount(this.state.myCart)
+
+        this.setState({
+          amount: amount
         })
 
         const totalItems = this.getTotalItems(json.items)
@@ -171,6 +186,22 @@ export default class App extends React.Component<any, Props> {
         currency = key.product.prices[1].currency
       })
       return currency
+    }  
+  }
+
+  getAmount(object) {
+    let amount = "";
+    const language = this.state.myLanguage
+    if(language == "sv_SE" || language == undefined) {
+      object.forEach(key => {
+        amount = key.product.prices[0].amount
+      })
+      return amount
+    } else {
+      object.forEach(key => {
+        amount = key.product.prices[1].amount
+      })
+      return amount
     }  
   }
 
@@ -255,9 +286,9 @@ export default class App extends React.Component<any, Props> {
           <h2>Electronics & Computer peripherals </h2>
           <p>A diverse collection of the most awesome products on this side of the hemisphere.</p>
           <h4>Products</h4>
-          <Products setTotalItems={this.setTotalItems} setSubTotal={this.setSubTotal} setCurrency={this.setCurrency} setProducts={this.setProducts} setMyCart={this.setMyCart} subTotal={this.state.subTotal}/>
+          <Products setTotalItems={this.setTotalItems} setSubTotal={this.setSubTotal} setCurrency={this.setCurrency} setProducts={this.setProducts} setMyCart={this.setMyCart} subTotal={this.state.subTotal} myLanguage={this.state.myLanguage} products={this.state.products}/>
         </main>
-        <ShoppingCart active={active} closeCart={this.closeCart.bind(this)} setTotalItems={this.setTotalItems} setSubTotal={this.setSubTotal} setMyCart={this.setMyCart} myCart={this.state.myCart} currency={this.state.currency} language={this.state.myLanguage} subTotal={this.state.subTotal} />
+        <ShoppingCart active={active} closeCart={this.closeCart.bind(this)} setTotalItems={this.setTotalItems} setSubTotal={this.setSubTotal} setMyCart={this.setMyCart} myCart={this.state.myCart} currency={this.state.currency} amount={this.state.amount} myLanguage={this.state.myLanguage} subTotal={this.state.subTotal} />
         <footer>
 
         </footer>
