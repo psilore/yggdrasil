@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { css, Styled } from 'react-css-in-js';
 import Product from '../Product/Product';
-import axios, { AxiosResponse } from 'axios';
 
 
 interface Props {
@@ -75,6 +74,22 @@ export default class Products extends React.Component<any,Props> {
       return a + b;
     }, 0);
     return sumItems
+  }
+
+  getAmount(object) {
+    let amount = "";
+    const language = this.props.myLanguage
+    if(language == "sv_SE" || language == undefined) {
+      object.forEach(key => {
+        amount = key.product.prices[0].amount
+      })
+      return amount
+    } else {
+      object.forEach(key => {
+        amount = key.product.prices[1].amount
+      })
+      return amount
+    }  
   }
 
   getProductsTotal(object, language) {
