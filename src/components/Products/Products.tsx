@@ -8,8 +8,7 @@ interface Props {
   baseUrl: any,
   path: any
   cart: any,
-  myCart: any,
-  products: any
+  myCart: any
 }
 
 export default class Products extends React.Component<any,Props> {
@@ -22,23 +21,12 @@ export default class Products extends React.Component<any,Props> {
       baseUrl: 'http://localhost:8181/',
       path: 'cart/',
       cart: [],
-      myCart: [],
-      products: []
+      myCart: []
     };
 
 
     this.postItem = this.postItem.bind(this);
-    this.getProducts = this.getProducts.bind(this);
 
-  }
-
-
-  async getProducts() {
-    const res = await fetch(`http://localhost:8181/products`);
-    const data = await res.json();
-    this.setState({
-      products: data
-    })
   }
 
   async postItem(id) {

@@ -6,7 +6,6 @@ import Cart from './components/Icons/Cart';
 import Flag from './components/Icons/Flag';
 
 import { css, Styled } from 'react-css-in-js';
-import { useEffect } from 'react';
 
 interface Props {
   active: boolean,
