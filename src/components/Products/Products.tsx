@@ -59,6 +59,8 @@ export default class Products extends React.Component<any,Props> {
 
       this.props.setTotalItems(this.getTotalItems(json.items));
 
+      this.props.setCurrency(this.getCurrency(json.items));
+
     })
     .catch(err => console.log('Request Failed', err));
 

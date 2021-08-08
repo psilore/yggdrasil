@@ -10,6 +10,7 @@ interface Props {
   myCart: any,
   total: any,
   subTotal: any
+  currency: any
 }
 
 
@@ -20,7 +21,8 @@ export default class ShoppingCart extends React.Component<any,Props>  {
     this.state = {
       myCart: [],
       total: 0,
-      subTotal: 0
+      subTotal: 0,
+      currency: ""
     };
 
   }
@@ -62,10 +64,12 @@ export default class ShoppingCart extends React.Component<any,Props>  {
           margin: 0;
           display: flex;
           flex-flow: row nowrap;
+          justify-content: flex-end;
         }
-        button {
+        nav button {
           border: none;
           margin-left: auto;
+          margin-right: 0;
         }
         .cart-sub-total-group {
           display: flex;
@@ -111,12 +115,13 @@ export default class ShoppingCart extends React.Component<any,Props>  {
               imageUrl={cart.product.imageUrl}
               title={cart.product.title}
               quantity={cart.quantity}
-              price={this.props.amount}
+              price={cart.product.prices[0].amount}
               currency={this.props.currency}
               key={cart.product.id}
               setMyCart={this.props.setMyCart}
               setSubTotal={this.props.setSubTotal}
               setTotalItems={this.props.setTotalItems} 
+              setCurrency={this.props.setCurrency} 
               cart={this.props.myCart}
             /> 
           ))}
