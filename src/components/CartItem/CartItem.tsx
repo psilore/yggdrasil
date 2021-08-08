@@ -71,14 +71,7 @@ export default class CartItem extends React.Component<any,Props>  {
 
       this.updateCart(this.state.cart)
 
-      const items = Object.assign(json.items); 
-      const totalArray = this.getTotalItems(items)
-
-      const sumItems = totalArray.reduce(function(a, b){
-        return a + b;
-      }, 0);
-
-      this.props.setTotalItems(sumItems);
+      this.props.setTotalItems(this.getTotalItems(json.items));
 
     })
     .catch(err => console.log('Request Failed', err));
@@ -119,14 +112,7 @@ export default class CartItem extends React.Component<any,Props>  {
 
         this.updateCart(this.state.cart) 
         
-        const items = Object.assign(json.items); 
-        const totalArray = this.getTotalItems(items)
-
-        const sumItems = totalArray.reduce(function(a, b){
-          return a + b;
-        }, 0);
-
-        this.props.setTotalItems(sumItems);
+        this.props.setTotalItems(this.getTotalItems(json.items));
 
       })
       .catch(err => console.log('Request Failed', err));    
@@ -261,7 +247,7 @@ export default class CartItem extends React.Component<any,Props>  {
             max-width: 200px;
             display: flex;
             justify-content: flex-end;
-            width: 120px;
+            width: 96px;
             margin-right: 16px;
           }  
           .cart-item-price span {

@@ -257,7 +257,7 @@ export default class App extends React.Component<any, Props> {
           <h4>Products</h4>
           <Products setTotalItems={this.setTotalItems} setSubTotal={this.setSubTotal} setCurrency={this.setCurrency} setProducts={this.setProducts} setMyCart={this.setMyCart} subTotal={this.state.subTotal}/>
         </main>
-        <ShoppingCart active={active} closeCart={this.closeCart.bind(this)} setTotalItems={this.setTotalItems} setSubTotal={this.setSubTotal} setMyCart={this.setMyCart} myCart={this.state.myCart} currency={this.state.currency} subTotal={this.state.subTotal} />
+        <ShoppingCart active={active} closeCart={this.closeCart.bind(this)} setTotalItems={this.setTotalItems} setSubTotal={this.setSubTotal} setMyCart={this.setMyCart} myCart={this.state.myCart} currency={this.state.currency} language={this.state.myLanguage} subTotal={this.state.subTotal} />
         <footer>
 
         </footer>
