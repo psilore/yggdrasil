@@ -78,22 +78,6 @@ export default class Products extends React.Component<any,Props> {
     return sumItems
   }
 
-  getAmount(object) {
-    let amount = "";
-    const language = this.props.myLanguage
-    if(language == "sv_SE" || language == undefined) {
-      object.forEach(key => {
-        amount = key.product.prices[0].amount
-      })
-      return amount
-    } else {
-      object.forEach(key => {
-        amount = key.product.prices[1].amount
-      })
-      return amount
-    }  
-  }
-
   getProductsTotal(object, language) {
     if(language == "sv_SE" || language == undefined) {
       let result = object.map(data=>{
