@@ -276,7 +276,7 @@ export default class CartItem extends React.Component<any,Props>  {
           <div className="cart-remove-item">
             <Button 
               onClick={ () => this.deleteItem() }
-              children= { <Delete name="delete" color="#E05252" size={12} /> }
+              children= { <Delete name="delete" color="white" size={16} /> }
             />
           </div>
         </div>

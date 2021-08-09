@@ -12,7 +12,7 @@
    <path d="M0 10H24V14H0V10Z"/>
   </symbol>
   <symbol id="delete" viewBox="0 0 24 24" >
-    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 24C18.6274 24 24 18.6274 24 12C24 5.37258 18.6274 0 12 0C5.37258 0 0 5.37258 0 12C0 18.6274 5.37258 24 12 24ZM21 10H3V14H21V10Z"/>
+    <path d="M7 4V2h10v2h5v2h-2v15a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V6H2V4h5zM6 6v14h12V6H6zm3 3h2v8H9V9zm4 0h2v8h-2V9z"/>
   </symbol>
   <symbol id="flag" viewBox="0 0 24 19" >
     <rect width="24" height="19" fill="#3586FF"/>
