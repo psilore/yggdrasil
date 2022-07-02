@@ -32,7 +32,7 @@
     "i": "^0.3.6",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^27.0.4",
-    "npm": "^7.18.1",
+    "npm": "^8.11.0",
     "parcel-bundler": "^1.6.2",
     "parcel-plugin-static-files-copy": "^2.6.0",
     "react-css-in-js": "^4.0.3",
